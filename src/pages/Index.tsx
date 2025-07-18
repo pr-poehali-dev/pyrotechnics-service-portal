@@ -11,7 +11,9 @@ const Index = () => {
   const [calculatorData, setCalculatorData] = useState({
     guests: '',
     duration: '',
-    type: 'standard'
+    type: 'standard',
+    letters: '',
+    serviceType: 'fireworks'
   });
 
   const services = [
@@ -31,7 +33,7 @@ const Index = () => {
       title: "Объемные надписи",
       description: "Пиротехнические надписи и логотипы из огня",
       icon: "Type",
-      price: "от 35 000₽"
+      price: "7 000₽ за букву"
     }
   ];
 
@@ -60,6 +62,11 @@ const Index = () => {
   ];
 
   const calculatePrice = () => {
+    if (calculatorData.serviceType === 'letters') {
+      const letters = parseInt(calculatorData.letters) || 0;
+      return letters * 7000;
+    }
+    
     const basePrice = calculatorData.type === 'premium' ? 50000 : 25000;
     const guestMultiplier = parseInt(calculatorData.guests) > 100 ? 1.5 : 1;
     const durationMultiplier = parseInt(calculatorData.duration) > 30 ? 1.3 : 1;
@@ -245,57 +252,106 @@ const Index = () => {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="grid md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <Label htmlFor="guests" className="text-white font-open-sans">Количество гостей</Label>
-                  <Input
-                    id="guests"
-                    type="number"
-                    placeholder="100"
-                    value={calculatorData.guests}
-                    onChange={(e) => setCalculatorData({...calculatorData, guests: e.target.value})}
-                    className="bg-black/50 border-gold/20 text-white"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="duration" className="text-white font-open-sans">Длительность (мин)</Label>
-                  <Input
-                    id="duration"
-                    type="number"
-                    placeholder="15"
-                    value={calculatorData.duration}
-                    onChange={(e) => setCalculatorData({...calculatorData, duration: e.target.value})}
-                    className="bg-black/50 border-gold/20 text-white"
-                  />
-                </div>
-              </div>
-              
               <div className="space-y-2">
-                <Label className="text-white font-open-sans">Тип шоу</Label>
-                <div className="flex gap-4">
+                <Label className="text-white font-open-sans">Тип услуги</Label>
+                <div className="flex gap-4 flex-wrap">
                   <Button
-                    variant={calculatorData.type === 'standard' ? 'default' : 'outline'}
-                    onClick={() => setCalculatorData({...calculatorData, type: 'standard'})}
-                    className={calculatorData.type === 'standard' ? 'bg-gold text-black' : 'border-gold text-gold'}
+                    variant={calculatorData.serviceType === 'fireworks' ? 'default' : 'outline'}
+                    onClick={() => setCalculatorData({...calculatorData, serviceType: 'fireworks'})}
+                    className={calculatorData.serviceType === 'fireworks' ? 'bg-gold text-black' : 'border-gold text-gold'}
                   >
-                    Стандарт
+                    Фейерверки
                   </Button>
                   <Button
-                    variant={calculatorData.type === 'premium' ? 'default' : 'outline'}
-                    onClick={() => setCalculatorData({...calculatorData, type: 'premium'})}
-                    className={calculatorData.type === 'premium' ? 'bg-gold text-black' : 'border-gold text-gold'}
+                    variant={calculatorData.serviceType === 'fountains' ? 'default' : 'outline'}
+                    onClick={() => setCalculatorData({...calculatorData, serviceType: 'fountains'})}
+                    className={calculatorData.serviceType === 'fountains' ? 'bg-gold text-black' : 'border-gold text-gold'}
                   >
-                    Премиум
+                    Холодные фонтаны
+                  </Button>
+                  <Button
+                    variant={calculatorData.serviceType === 'letters' ? 'default' : 'outline'}
+                    onClick={() => setCalculatorData({...calculatorData, serviceType: 'letters'})}
+                    className={calculatorData.serviceType === 'letters' ? 'bg-gold text-black' : 'border-gold text-gold'}
+                  >
+                    Объемные буквы
                   </Button>
                 </div>
               </div>
               
-              {calculatorData.guests && calculatorData.duration && (
+              {calculatorData.serviceType === 'letters' ? (
+                <div className="space-y-2">
+                  <Label htmlFor="letters" className="text-white font-open-sans">Количество букв</Label>
+                  <Input
+                    id="letters"
+                    type="number"
+                    placeholder="5"
+                    value={calculatorData.letters}
+                    onChange={(e) => setCalculatorData({...calculatorData, letters: e.target.value})}
+                    className="bg-black/50 border-gold/20 text-white"
+                  />
+                </div>
+              ) : (
+                <>
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <Label htmlFor="guests" className="text-white font-open-sans">Количество гостей</Label>
+                      <Input
+                        id="guests"
+                        type="number"
+                        placeholder="100"
+                        value={calculatorData.guests}
+                        onChange={(e) => setCalculatorData({...calculatorData, guests: e.target.value})}
+                        className="bg-black/50 border-gold/20 text-white"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="duration" className="text-white font-open-sans">Длительность (мин)</Label>
+                      <Input
+                        id="duration"
+                        type="number"
+                        placeholder="15"
+                        value={calculatorData.duration}
+                        onChange={(e) => setCalculatorData({...calculatorData, duration: e.target.value})}
+                        className="bg-black/50 border-gold/20 text-white"
+                      />
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label className="text-white font-open-sans">Тип шоу</Label>
+                    <div className="flex gap-4">
+                      <Button
+                        variant={calculatorData.type === 'standard' ? 'default' : 'outline'}
+                        onClick={() => setCalculatorData({...calculatorData, type: 'standard'})}
+                        className={calculatorData.type === 'standard' ? 'bg-gold text-black' : 'border-gold text-gold'}
+                      >
+                        Стандарт
+                      </Button>
+                      <Button
+                        variant={calculatorData.type === 'premium' ? 'default' : 'outline'}
+                        onClick={() => setCalculatorData({...calculatorData, type: 'premium'})}
+                        className={calculatorData.type === 'premium' ? 'bg-gold text-black' : 'border-gold text-gold'}
+                      >
+                        Премиум
+                      </Button>
+                    </div>
+                  </div>
+                </>
+              )}
+              
+              {((calculatorData.serviceType === 'letters' && calculatorData.letters) || 
+                (calculatorData.serviceType !== 'letters' && calculatorData.guests && calculatorData.duration)) && (
                 <div className="text-center py-6 border-t border-gold/20">
                   <p className="text-gray-400 font-open-sans mb-2">Предварительная стоимость:</p>
                   <p className="text-4xl font-montserrat font-bold text-gold">
                     {calculatePrice().toLocaleString('ru-RU')} ₽
                   </p>
+                  {calculatorData.serviceType === 'letters' && (
+                    <p className="text-sm text-gray-400 mt-2 font-open-sans">
+                      По 7 000₽ за букву
+                    </p>
+                  )}
                   <p className="text-sm text-gray-400 mt-2 font-open-sans">
                     *Окончательная стоимость рассчитывается после консультации
                   </p>
